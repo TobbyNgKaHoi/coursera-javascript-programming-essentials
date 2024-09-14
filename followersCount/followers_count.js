@@ -10,8 +10,17 @@ function displayCount() {
     document.getElementById("countDisplay").innerHTML = count;  // Display the count in the HTML
 }
 
+function resetCount() {
+    count = 0;
+    displayCount(); // Display the count
+    checkCountValue(); // Check count value and display messages 
+}
+
 function checkCountValue() {
-    if (count === 10) {
+    if (count === 0) {
+        alert("Followers count as been resetted");
+    }
+    else if (count === 10) {
         alert("Your Instagram post gained 10 followers! Congratualations!");
     }
     else if (count === 20) {

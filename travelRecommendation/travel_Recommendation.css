@@ -32,8 +32,35 @@ nav {
   
   /* Basic CSS for the form elements */
   body {
+    background-image: url('./Hong_Kong_background.jpg');
+    height: 800px;
     font-family: Arial, sans-serif;
     /* margin: 20px; */
+  }
+
+  li.round {
+    display: inline-block;
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    margin: 20px auto; /* Center the div horizontally */
+    width: 500px;
+    text-align: center; /* Center the text */
+    line-height: 50px; /* Center text vertically */
+  }
+
+  li.round input {
+    width: 300px;
+    background-color: white; /* White text */
+    color:  #4CAF50; /* Green background */  
+    
+    border: none; /* Remove the border */
+    outline: none; /* Remove the outline when focused */
+    padding: 10px; /* Add some padding for better appearance */
+  }
+
+  li.round button {
+    color: white; /* White text */
+    background-color:  #4CAF50; /* Green background */  
   }
   
   h1 {
@@ -68,6 +95,60 @@ nav {
     background-color: #45a049;
   }
   
+  .container {
+    padding-left: 100px;
+  }
+
+  .container h1 {
+    color: white;
+    padding-top: 50px;
+    width: 200px;
+  }
+
+  .container h2 {
+    color: white;
+    padding-top: 50px;
+    width: 200px;
+  }
+
+  .container p {
+    color: white;
+    width: 300px;
+    font-size: 18px;
+  }
+
+  .container p.about-us {
+    width: 800px;
+    font-size: 14px;
+  }
+
+  .container button {
+    color: white;
+    width: 150px;
+    font-weight: bold;
+    margin-top: 50px;
+  }
+
+  #team-container {
+    display: grid;
+    grid-template-columns: repeat(3, 280px);
+    grid-gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+  .team {
+    color: white; /* White text */
+  }
+  .team button {
+    width: 130px;
+    background-color:  blue; /* blue background */  
+    
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    margin: 20px auto; /* Center the div horizontally */
+  }
+
   /* Basic CSS for the report section */
   h2 {
     margin-top: 30px;

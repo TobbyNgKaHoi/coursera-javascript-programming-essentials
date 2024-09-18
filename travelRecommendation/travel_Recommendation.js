@@ -1,103 +1,69 @@
-const addPatientButton = document.getElementById("addPatient");
-const report = document.getElementById("report");
+const locationInput = document.getElementById("locationInput");
+const resultDiv = document.getElementById("result");
 const btnSearch = document.getElementById("btnSearch");
-const patients = [];
-
-function addPatient() {
-    const name = document.getElementById("name").value;
-    const gender = document.querySelector("input[name='gender']:checked");
-    const age = document.getElementById("age").value;
-    const condition = document.getElementById("condition").value;
-
-    if (name && gender && age && condition) {
-        patients.push({ name, gender: gender.value, age, condition})
-        resetForm();
-        generateReport();
-    }
-    else {
-        alert('Pls ipnut all fields')
-    }
-}
+const btnReset = document.getElementById("btnReset");
 
 function resetForm() {
-    document.getElementById("name").value = "";
-    document.querySelector("input[name='gender']:checked").checked = false;
-    document.getElementById("age").value = "";
-    document.getElementById("condition").value = "";
+    locationInput.value = "";
+    resultDiv.innerHTML = '';
 }
 
-function searchCondition() {
-    const input = document.getElementById('conditionInput').value.toLowerCase();
-    const resultDiv = document.getElementById('result');
+function searchRecommendation() {
+    
     resultDiv.innerHTML = '';
 
-    fetch('health_analysis.json')
-      .then(response => response.json())
-      .then(data => {
-        const condition = data.conditions.find(item => item.name.toLowerCase() === input);
-
-        if (condition) {
-          const symptoms = condition.symptoms.join(', ');
-          const prevention = condition.prevention.join(', ');
-          const treatment = condition.treatment;
-
-          resultDiv.innerHTML += `<h2>${condition.name}</h2>`;
-          resultDiv.innerHTML += `<img src="${condition.imagesrc}" alt="hjh">`;
-
-          resultDiv.innerHTML += `<p><strong>Symptoms:</strong> ${symptoms}</p>`;
-          resultDiv.innerHTML += `<p><strong>Prevention:</strong> ${prevention}</p>`;
-          resultDiv.innerHTML += `<p><strong>Treatment:</strong> ${treatment}</p>`;
-        } else {
-          resultDiv.innerHTML = 'Condition not found.';
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        resultDiv.innerHTML = 'An error occurred while fetching data.';
-      });
-  }
-    btnSearch.addEventListener('click', searchCondition);
-
-function generateReport() {
-    const numPatients = patients.length;
-
-    const conditionsCount = {
-        "Diabetes": 0,
-        "Thyroid": 0,
-        "High Blood Pressure": 0,
+    var location = locationInput.value.trim().toLowerCase();
+    if (location == "") {
+        alert(locationInput.placeholder);
+        locationInput.focus();
+        return;
     }
 
-    const genderConditionsCount = {
-        "Male": {
-            "Diabetes": 0,
-            "Thyroid": 0,
-            "High Blood Pressure": 0,
-        },
-        "Female": {
-            "Diabetes": 0,
-            "Thyroid": 0,
-            "High Blood Pressure": 0,
-        }
-    }
+    fetch('travel_recommendation_api.json')
+        .then(response => response.json())
+        .then(data => {
+            
 
-    for (const patient of patients) {
-        conditionsCount[patient.condition]++;
-        genderConditionsCount[patient.gender][patient.condition]++;
-    }
+            Object.entries(data).forEach(([l1Key, l1Val]) => {
+                if (l1Key === "countries") {
+                    l1Val.forEach(country => {
+                        //let isBingoCountry = country.name.toLowerCase() == location;
 
-    report.innerHTML = `Number of patients: ${numPatients}<br><br>`;
-    report.innerHTML += `Conditions Breakdown: <br>`;
-    for (const condition in conditionsCount) {
-        report.innerHTML += `${condition}: ${conditionsCount[condition]}<br>`;
-    }
+                        country.cities.forEach(city => {
+                            if (city.name.toLowerCase().includes(location)) {
+                                resultDiv.innerHTML += `<div>
+                                    <img src="${city.imageUrl}" width="200" alt="${city.name}">
+                                    <p><b>${city.name}</b><br>${city.description}
+                                </div><hr><br>`;
+                            }
+                        });
+                    })
+                }
+                else {
+                    let isTypeMatch = l1Key.toLowerCase() == location;
+                    
+                    l1Val.forEach(city => {
+                        if (isTypeMatch || city.name.toLowerCase().includes(location)) {
+                            resultDiv.innerHTML += `<div>
+                                <img src="${city.imageUrl}" width="200" alt="${city.name}">
+                                <p><b>${city.name}</b><br>${city.description}
+                            </div><hr><br>`;
+                        }
+                    });
+                }
+            });
 
-    report.innerHTML += `<br>Gender-Based Conditions:<br>`;
-    for (const gender in genderConditionsCount) {
-        report.innerHTML += `${gender}:<br>`;
-        for (const condition in genderConditionsCount[gender]) {
-            report.innerHTML += `&nbsp;&nbsp;${condition}: ${genderConditionsCount[gender][condition]}<br>`;
-        }
-    }
+            if (resultDiv.innerHTML == "") {
+                alert("Not Found\nPls try popular keywords like temples and beaches");
+                locationInput.focus();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            resultDiv.innerHTML = 'An error occurred while fetching data.';
+        });
 }
 
-addPatientButton.addEventListener("click", addPatient);
+
+btnSearch.addEventListener("click", searchRecommendation);
+btnReset.addEventListener("click", resetForm);

@@ -160,12 +160,10 @@ nav {
     word-wrap: break-word;
   }
 #result{
-  height: 400px;
-  width: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-direction: column;
+    position: fixed;
+    top: 100px;
+    right: 0px;
+    background-color: green;
 }
   #result img{
     width: 200px;
